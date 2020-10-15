@@ -9,16 +9,13 @@ use Onix\Router\Route\MatchedRoute;
 class RouteFinder
 {
     private Router $router;
-    private RouteCollectionFactory $routeCollectionFactory;
     private RouteMatcher $routeMatcher;
 
     public function __construct(
         Router $router,
-        RouteCollectionFactory $routeCollectionFactory,
         RouteMatcher $routeMatcher
     ) {
         $this->router = $router;
-        $this->routeCollectionFactory = $routeCollectionFactory;
         $this->routeMatcher = $routeMatcher;
     }
 
