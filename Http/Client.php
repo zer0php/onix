@@ -38,7 +38,12 @@ class Client
      */
     public function post(string $url, $data = '', array $headers = []): ResponseInterface
     {
-        $body = new StringStream(is_array($data) ? http_build_query($data) : $data);
+        if (is_array($data)) {
+            $data = http_build_query($data);
+            $headers['Content-Type'] = 'application/x-www-form-urlencoded';
+        }
+
+        $body = new StringStream($data);
         $request = new Request('POST', $url, $headers, $body);
 
         return $this->sendRequest($request);
