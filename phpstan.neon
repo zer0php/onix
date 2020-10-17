@@ -1,0 +1,11 @@
+parameters:
+    level: 5
+    paths:
+        - src/
+    bootstrapFiles:
+        - vendor/autoload.php
+    ignoreErrors:
+        - '#Call to an undefined method ReflectionType::getName\(\)#'
+        -
+            message: '#Parameter \#1 \$autoload_function of function spl_autoload_register#'
+            path: src/Autoload/ClassLoader.php
