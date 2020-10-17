@@ -10,7 +10,6 @@ use Onix\Http\ResponseInterface;
 use Onix\Http\Response\JsonResponse;
 use Onix\Http\ServerRequest;
 use ErrorException;
-use Exception;
 use Throwable;
 
 class ErrorHandlerMiddleware implements MiddlewareInterface
