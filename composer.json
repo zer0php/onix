@@ -1,6 +1,12 @@
 {
   "name": "zer0php/onix",
+  "type": "project",
   "description": "Onix Micro Framework",
+  "keywords": [
+    "onix",
+    "micro",
+    "framework"
+  ],
   "license": "MIT",
   "require": {
     "php": ">=7.4",
