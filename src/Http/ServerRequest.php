@@ -13,6 +13,7 @@ class ServerRequest extends Request
     private array $parsedBody;
     private array $cookieParams;
     private array $attributes;
+    private array $files;
 
     public static function fromGlobals(): self
     {
@@ -21,7 +22,7 @@ class ServerRequest extends Request
         $headers = getallheaders();
         $body = new ResourceStream(fopen('php://input', 'rb'));
 
-        return new self($method, $uri, $headers, $body, $_SERVER, $_GET, $_POST, $_COOKIE);
+        return new self($method, $uri, $headers, $body, $_SERVER, $_GET, $_POST, $_COOKIE, $_FILES);
     }
 
     public function __construct(
@@ -32,7 +33,8 @@ class ServerRequest extends Request
         array $server = [],
         array $queryParams = [],
         array $parsedBody = [],
-        array $cookieParams = []
+        array $cookieParams = [],
+        array $files = []
     ) {
         parent::__construct($method, $uri, $headers, $body);
 
@@ -40,6 +42,7 @@ class ServerRequest extends Request
         $this->queryParams = $queryParams;
         $this->parsedBody = $parsedBody;
         $this->cookieParams = $cookieParams;
+        $this->files = $files;
     }
 
     public function getServerParams(): array
@@ -60,6 +63,11 @@ class ServerRequest extends Request
     public function getCookieParams(): array
     {
         return $this->cookieParams;
+    }
+
+    public function getFiles(): array
+    {
+        return $this->files;
     }
 
     public function withAttributes(array $attributes): self
