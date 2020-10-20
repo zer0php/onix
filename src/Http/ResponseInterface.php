@@ -11,4 +11,6 @@ interface ResponseInterface
     public function getStatusCode(): int;
 
     public function getHeaders(): array;
+
+    public function withHeader(string $key, string $value): self;
 }

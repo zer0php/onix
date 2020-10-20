@@ -33,4 +33,12 @@ class Response implements ResponseInterface
     {
         return $this->headers;
     }
+
+    public function withHeader(string $key, string $value): ResponseInterface
+    {
+        $new = clone $this;
+        $new->headers[$key] = $value;
+
+        return $new;
+    }
 }
