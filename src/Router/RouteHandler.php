@@ -5,7 +5,8 @@ declare(strict_types=1);
 namespace Onix\Router;
 
 use Onix\Container\Container;
-use Onix\Container\NotFoundException;
+use Onix\Http\Middleware\MiddlewareStack;
+use Onix\Http\Middleware\MiddlewareStackHandler;
 use Onix\Http\RequestHandlerInterface;
 use Onix\Http\ResponseInterface;
 use Onix\Http\ServerRequest;
@@ -25,32 +26,30 @@ class RouteHandler implements RequestHandlerInterface
     /**
      * @param ServerRequest $request
      * @return ResponseInterface
-     * @throws NotFoundException
      * @throws RouteNotFoundException
      */
     public function handle(ServerRequest $request): ResponseInterface
     {
         $matchedRoute = $this->getMatchedRouteFromRequest($request);
         $action = $matchedRoute->getRoute()->getAction();
-        $attributes = $this->getAttributes($matchedRoute);
+        $attributes = $this->getMergedAttributes($matchedRoute);
         $requestWithAttributes = $request->withAttributes($attributes);
 
-        return $this->getHandler($action)->handle($requestWithAttributes);
+        $middlewareStack = new MiddlewareStack($this->container);
+        if (!empty($attributes['_middlewares'])) {
+            $this->addMiddlewaresToStack($middlewareStack, (array)$attributes['_middlewares']);
+        }
+        $middlewareStack->add($action);
+
+        $middlewareStackHandler = new MiddlewareStackHandler($middlewareStack);
+
+        return $middlewareStackHandler->handle($requestWithAttributes);
     }
 
-    /**
-     * @param string $handlerClass
-     * @return RequestHandlerInterface
-     * @throws NotFoundException
-     */
-    private function getHandler(string $handlerClass): RequestHandlerInterface
-    {
-        return $this->container->get($handlerClass);
-    }
-
-    private function getAttributes(MatchedRoute $matchedRoute): array
+    private function getMergedAttributes(MatchedRoute $matchedRoute): array
     {
         $route = $matchedRoute->getRoute();
+
         return array_merge(
             $route->getAttributes(),
             $matchedRoute->getParams()
@@ -68,5 +67,12 @@ class RouteHandler implements RequestHandlerInterface
             $request->getMethod(),
             $request->getPath()
         );
+    }
+
+    private function addMiddlewaresToStack(MiddlewareStack $middlewareStack, array $middlewareClasses)
+    {
+        foreach ($middlewareClasses as $middlewareClass) {
+            $middlewareStack->add($middlewareClass);
+        }
     }
 }

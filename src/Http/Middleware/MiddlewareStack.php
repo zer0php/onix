@@ -6,6 +6,7 @@ namespace Onix\Http\Middleware;
 
 use Onix\Container\Container;
 use Onix\Http\MiddlewareInterface;
+use Onix\Http\RequestHandlerInterface;
 use RuntimeException;
 
 class MiddlewareStack
@@ -31,6 +32,12 @@ class MiddlewareStack
             throw new RuntimeException('MiddlewareStack is empty!');
         }
 
-        return $this->container->get($middlewareClass);
+        $middleware = $this->container->get($middlewareClass);
+
+        if ($middleware instanceof RequestHandlerInterface) {
+            return new RequestHandlerMiddleware($middleware);
+        }
+
+        return $middleware;
     }
 }

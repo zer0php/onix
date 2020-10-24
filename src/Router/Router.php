@@ -60,6 +60,11 @@ class Router implements RouteCollectorInterface
         $this->route('TRACE', $template, $action, $attributes);
     }
 
+    public function middlewares(array $middlewares, callable $routes): void
+    {
+        $routes(new RouterProxy($this, ['_middlewares' => $middlewares]));
+    }
+
     public function setNotFoundRoute(string $action, array $attributes = []): void
     {
         $this->notFoundRouteArray = [$action, $attributes];
