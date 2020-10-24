@@ -12,18 +12,8 @@ class ServerRequest extends Request
     private array $queryParams;
     private array $parsedBody;
     private array $cookieParams;
-    private array $attributes;
     private array $files;
-
-    public static function fromGlobals(): self
-    {
-        $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
-        $uri = $_SERVER['REQUEST_URI'] ?? '/';
-        $headers = getallheaders();
-        $body = new ResourceStream(fopen('php://input', 'rb'));
-
-        return new self($method, $uri, $headers, $body, $_SERVER, $_GET, $_POST, $_COOKIE, $_FILES);
-    }
+    private array $attributes = [];
 
     public function __construct(
         string $method,
@@ -91,5 +81,15 @@ class ServerRequest extends Request
     public function getAttribute(string $name, $default = null)
     {
         return $this->attributes[$name] ?? $default;
+    }
+
+    public static function fromGlobals(): self
+    {
+        $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
+        $uri = $_SERVER['REQUEST_URI'] ?? '/';
+        $headers = getallheaders();
+        $body = new ResourceStream(fopen('php://input', 'rb'));
+
+        return new self($method, $uri, $headers, $body, $_SERVER, $_GET, $_POST, $_COOKIE, $_FILES);
     }
 }
