@@ -10,13 +10,13 @@ use Onix\Http\ServerRequest;
 
 class CorsMiddleware implements MiddlewareInterface
 {
-    private string $allowOrigin;
-    private string $allowMethods;
+    private string $allowedOrigin;
+    private string $allowedMethods;
 
-    public function __construct(string $allowOrigin = '*', $allowMethods = 'GET, POST, OPTIONS')
+    public function __construct(string $allowedOrigin = '*', $allowedMethods = 'GET, POST, OPTIONS')
     {
-        $this->allowOrigin = $allowOrigin;
-        $this->allowMethods = $allowMethods;
+        $this->allowedOrigin = $allowedOrigin;
+        $this->allowedMethods = $allowedMethods;
     }
 
     public function process(ServerRequest $request, RequestHandlerInterface $handler): ResponseInterface
@@ -24,14 +24,17 @@ class CorsMiddleware implements MiddlewareInterface
         if ($request->getMethod() !== 'OPTIONS') {
             $response = $handler->handle($request);
 
-            return $response->withHeader('Access-Control-Allow-Origin', $this->allowOrigin);
+            return $response
+                ->withHeader('Access-Control-Allow-Origin', $this->allowedOrigin);
         }
 
         $responseHeaders = [];
         $requestHeaders = $request->getHeaders();
 
+        $responseHeaders['Access-Control-Allow-Origin'] = $this->allowedOrigin;
+
         if (isset($requestHeaders['Access-Control-Request-Method'])) {
-            $responseHeaders['Access-Control-Allow-Methods'] = $this->allowMethods;
+            $responseHeaders['Access-Control-Allow-Methods'] = $this->allowedMethods;
         }
 
         if (isset($requestHeaders['Access-Control-Request-Headers'])) {
