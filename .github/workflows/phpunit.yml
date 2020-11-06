@@ -5,9 +5,10 @@ on:
     branches: [ master ]
 
 jobs:
-  build:
+  build-and-run-tests:
     runs-on: self-hosted
     steps:
+    - name: "Checkout"
     - uses: actions/checkout@v2
       
     - name: Install dependencies
@@ -15,9 +16,6 @@ jobs:
       
     - name: Validate composer.json and composer.lock
       run: composer validate
-
-    - name: Install dependencies
-      run: composer install --prefer-dist
 
     - name: Run test suite
       run: composer cat
