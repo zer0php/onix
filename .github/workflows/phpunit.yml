@@ -7,9 +7,13 @@ on:
 jobs:
   build:
     runs-on: self-hosted
+    container: php:7.4.12-alpine
     steps:
     - uses: actions/checkout@v2
-
+      
+    - name: Install dependencies
+      uses: php-actions/composer@v2
+      
     - name: Validate composer.json and composer.lock
       run: composer validate
 
