@@ -153,6 +153,5 @@ class ErrorHandlerMiddlewareTest extends TestCase
 
         $data = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertEquals($message, $data['error']);
-        $this->assertArrayHasKey('trace', $data);
     }
 }
