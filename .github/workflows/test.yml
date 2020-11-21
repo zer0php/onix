@@ -5,7 +5,7 @@ on:
     branches: [ master ]
 
 jobs:
-  build-and-run-tests:
+  install-and-cat-command:
     runs-on: self-hosted
     steps:
     - name: "Checkout"
@@ -14,8 +14,8 @@ jobs:
     - name: "Install dependencies"
       uses: php-actions/composer@v4
       
-    - name: "Run tests"
+    - name: "Run code style Checks + code Analyzes + Tests"
       uses: php-actions/composer@v4
       with:
-        command: test
+        command: cat
  
