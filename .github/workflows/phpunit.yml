@@ -17,5 +17,5 @@ jobs:
     - name: "Run tests"
       uses: php-actions/composer@v4
       with:
-        command: composer test
+        command: test
  
