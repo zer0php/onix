@@ -113,7 +113,6 @@ class ErrorHandlerMiddlewareTest extends TestCase
      */
     public function process_DebugOffWithError_ReturnsJsonResponseWithErrorMessage(): void
     {
-        $errorMessage = 'Something went wrong';
         $expectedErrorMessage = 'Internal Server Error';
         $debugOn = false;
         $errorHandler = new ErrorHandlerMiddleware($debugOn);
@@ -123,11 +122,11 @@ class ErrorHandlerMiddlewareTest extends TestCase
         $handler
             ->expects($this->once())
             ->method('handle')
-            ->willThrowException(new \Error($errorMessage));
+            ->willThrowException(new \Error('Something went wrong'));
 
         $response = $errorHandler->process($request, $handler);
 
-        $this->assertErrorResponse($response, $errorMessage);
+        $this->assertErrorResponse($response, $expectedErrorMessage);
     }
 
     /**
