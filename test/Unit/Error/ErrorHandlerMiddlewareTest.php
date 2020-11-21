@@ -44,10 +44,11 @@ class ErrorHandlerMiddlewareTest extends TestCase
     /**
      * @test
      */
-    public function process_WithException_ReturnsJsonResponseWithErrorMessage(): void
+    public function process_DebugOnWithException_ReturnsJsonResponseWithErrorMessage(): void
     {
         $errorMessage = 'Something went wrong';
-        $errorHandler = new ErrorHandlerMiddleware();
+        $debugOn = true;
+        $errorHandler = new ErrorHandlerMiddleware($debugOn);
 
         $request = $this->createMock(ServerRequest::class);
         $handler = $this->createMock(RequestHandlerInterface::class);
@@ -64,10 +65,11 @@ class ErrorHandlerMiddlewareTest extends TestCase
     /**
      * @test
      */
-    public function process_WithPhpError_ReturnsJsonResponseWithErrorMessage(): void
+    public function process_DebugOnWithPhpError_ReturnsJsonResponseWithErrorMessage(): void
     {
         $errorMessage = 'Something went wrong';
-        $errorHandler = new ErrorHandlerMiddleware();
+        $debugOn = true;
+        $errorHandler = new ErrorHandlerMiddleware($debugOn);
 
         $handler = $this->createMock(RequestHandlerInterface::class);
         $request = $this->createMock(ServerRequest::class);
@@ -88,10 +90,33 @@ class ErrorHandlerMiddlewareTest extends TestCase
     /**
      * @test
      */
-    public function process_WithError_ReturnsJsonResponseWithErrorMessage(): void
+    public function process_DebugOnWithError_ReturnsJsonResponseWithErrorMessage(): void
     {
         $errorMessage = 'Something went wrong';
-        $errorHandler = new ErrorHandlerMiddleware();
+        $debugOn = true;
+        $errorHandler = new ErrorHandlerMiddleware($debugOn);
+
+        $handler = $this->createMock(RequestHandlerInterface::class);
+        $request = $this->createMock(ServerRequest::class);
+        $handler
+            ->expects($this->once())
+            ->method('handle')
+            ->willThrowException(new \Error($errorMessage));
+
+        $response = $errorHandler->process($request, $handler);
+
+        $this->assertErrorResponse($response, $errorMessage);
+    }
+    
+    /**
+     * @test
+     */
+    public function process_DebugOffWithError_ReturnsJsonResponseWithErrorMessage(): void
+    {
+        $errorMessage = 'Something went wrong';
+        $expectedErrorMessage = 'Internal Server Error';
+        $debugOn = false;
+        $errorHandler = new ErrorHandlerMiddleware($debugOn);
 
         $handler = $this->createMock(RequestHandlerInterface::class);
         $request = $this->createMock(ServerRequest::class);
