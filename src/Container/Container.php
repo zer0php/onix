@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Onix\Container;
 
-class Container
+class Container implements ContainerInterface
 {
     /**
      * @var array<callable>
@@ -43,11 +43,16 @@ class Container
     {
         $factory = $this->getFactory($name);
 
-        if (!isset($this->instances[$name])) {
+        if (!$this->has($name)) {
             $this->instances[$name] = $factory($this, $name);
         }
 
         return $this->instances[$name];
+    }
+
+    public function has(string $name): bool
+    {
+        return isset($this->instances[$name]);
     }
 
     /**
@@ -58,7 +63,7 @@ class Container
     private function getFactory(string $name): callable
     {
         if (isset($this->factories[$name])) {
-                return $this->factories[$name];
+            return $this->factories[$name];
         }
 
         if ($this->defaultFactory) {
