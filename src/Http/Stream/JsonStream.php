@@ -17,6 +17,6 @@ class JsonStream implements StreamInterface
 
     public function getContents(): string
     {
-        return json_encode($this->data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR, 512);
+        return json_encode($this->data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR, 512);
     }
 }
