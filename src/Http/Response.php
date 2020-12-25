@@ -16,7 +16,7 @@ class Response implements ResponseInterface
     {
         $this->statusCode = $statusCode;
         $this->headers = $headers;
-        $this->body = $body ?? new StringStream('');
+        $this->body = $body ?? new StringStream();
     }
 
     public function getBody(): StreamInterface

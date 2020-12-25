@@ -6,17 +6,23 @@ namespace Onix\Http\Stream;
 
 use Onix\Http\StreamInterface;
 
-class JsonStream implements StreamInterface
+class JsonStream extends StringStream implements StreamInterface
 {
-    private array $data;
-
     public function __construct(array $data)
     {
-        $this->data = $data;
+        parent::__construct($this->getResourceFromData($data));
     }
 
-    public function getContents(): string
+    /**
+     * @param string $data
+     * @return false|resource
+     */
+    private function getResourceFromData(array $data)
     {
-        return json_encode($this->data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR, 512);
+        $resource = fopen('php://memory', 'wb+');
+        $json = json_encode($this->data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR, 512);
+        fwrite($resource, $json);
+
+        return $resource;
     }
 }

@@ -6,17 +6,25 @@ namespace Onix\Http\Stream;
 
 use Onix\Http\StreamInterface;
 
-class StringStream implements StreamInterface
+class StringStream extends ResourceStream implements StreamInterface
 {
-    private string $data;
-
     public function __construct(string $data = '')
     {
-        $this->data = $data;
+        $resource = $this->getResourceFromData($data);
+
+        parent::__construct($resource);
     }
 
-    public function getContents(): string
+    /**
+     * @param string $data
+     * @return false|resource
+     */
+    private function getResourceFromData(string $data)
     {
-        return $this->data;
+        $resource = fopen('php://memory', 'wb+');
+        fwrite($resource, $data);
+
+        return $resource;
     }
+
 }
