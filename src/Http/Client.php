@@ -10,6 +10,12 @@ use Onix\Http\Stream\StringStream;
 
 class Client
 {
+    private array $options;
+
+    public function __construct(array $options = [])
+    {
+        $this->options = $options;
+    }
 
     /**
      * @param string $url
@@ -64,12 +70,15 @@ class Client
             $request->getHeaders()
         );
 
-        return fopen(
-            $request->getUri(),
-            'rb',
-            false,
-            $context
-        );
+        set_error_handler(static function ($code, $msg, $file, $line) {
+            throw new ErrorException($msg, $code, 1, $file, $line);
+        });
+
+        $connection = fopen($request->getUri(), 'rb', false, $context);
+
+        restore_error_handler();
+
+        return $connection;
     }
 
     /**
@@ -81,13 +90,11 @@ class Client
     private function getContext(string $method, string $data = '', array $headers = [])
     {
         $transformedHeaders = $this->getTransformedHeaders($headers);
-        $options = [
-            'http' => [
-                'method' => $method,
-                'header' => implode("\r\n", $transformedHeaders),
-                'content' => $data
-            ]
-        ];
+
+        $options = $this->options;
+        $options['http']['method'] = $method;
+        $options['http']['header'] = implode("\r\n", $transformedHeaders);
+        $options['http']['content'] = $data;
 
         return stream_context_create($options);
     }
