@@ -16,11 +16,9 @@ class ViewTest extends TestCase
     public function getContents_NonExistentFile_ThrowsTemplateNotFoundException(): void
     {
         $nonExistentTemplateFile = 'not-existent-file';
-        $view = new View($nonExistentTemplateFile);
-
         $this->expectExceptionObject(new TemplateNotFoundException('Template not found: ' . $nonExistentTemplateFile));
-
-        $view->getContents();
+        
+        $view = new View($nonExistentTemplateFile);
     }
 
     /**
