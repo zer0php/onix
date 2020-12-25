@@ -10,13 +10,13 @@ class JsonStream extends StringStream implements StreamInterface
 {
     public function __construct(array $data)
     {
-        parent::__construct($this->getJsonStringFromData($data));
+        parent::__construct($this->getJsonFromData($data));
     }
 
-    private function getJsonStringFromData(array $data): string
+    private function getJsonFromData(array $data): string
     {
         return json_encode(
-            $this->data,
+            $data,
             JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR,
             512
         );
