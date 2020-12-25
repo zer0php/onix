@@ -23,6 +23,7 @@ class StringStream extends ResourceStream implements StreamInterface
     {
         $resource = fopen('php://memory', 'wb+');
         fwrite($resource, $data);
+        rewind($resource);
 
         return $resource;
     }

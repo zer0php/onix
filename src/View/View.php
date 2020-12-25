@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace Onix\View;
 
+use Onix\Http\Stream\ResourceStream;
 use Onix\Http\StreamInterface;
 
-class View implements StreamInterface
+class View extends ResourceStream implements StreamInterface
 {
     private string $template;
     private array $variables;
@@ -15,17 +16,28 @@ class View implements StreamInterface
     {
         $this->template = $template;
         $this->variables = $variables;
+
+        parent::__construct($this->getResourceFromRenderedTemplate());
     }
 
-    public function getContents(): string
+    /**
+     * @param string $data
+     * @return false|resource
+     */
+    protected function getResourceFromRenderedTemplate()
     {
-        return $this->render($this->template);
+        $resource = fopen('php://memory', 'wb+');
+        $data = $this->render($this->template);
+        fwrite($resource, $data);
+        rewind($resource);
+
+        return $resource;
     }
 
     protected function render(string $template): string
     {
         if (!file_exists($template)) {
-            throw new TemplateNotFoundException("Template not found: ${template}");
+            throw new TemplateNotFoundException("Template not found: {$template}");
         }
 
         ob_start();

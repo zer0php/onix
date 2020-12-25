@@ -22,6 +22,7 @@ class JsonStream extends StringStream implements StreamInterface
         $resource = fopen('php://memory', 'wb+');
         $json = json_encode($this->data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR, 512);
         fwrite($resource, $json);
+        rewind($resource);
 
         return $resource;
     }
