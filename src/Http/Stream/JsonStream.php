@@ -10,20 +10,19 @@ class JsonStream extends StringStream implements StreamInterface
 {
     public function __construct(array $data)
     {
-        parent::__construct($this->getResourceFromData($data));
+        parent::__construct($this->getJsonStringFromData($data));
     }
 
     /**
      * @param string $data
-     * @return false|resource
+     * @return string
      */
-    private function getResourceFromData(array $data)
+    private function getJsonStringFromData(array $data): string
     {
-        $resource = fopen('php://memory', 'wb+');
-        $json = json_encode($this->data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR, 512);
-        fwrite($resource, $json);
-        rewind($resource);
-
-        return $resource;
+        return json_encode(
+            $this->data,
+            JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR,
+            512
+        );
     }
 }

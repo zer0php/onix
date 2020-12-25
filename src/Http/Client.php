@@ -7,6 +7,7 @@ namespace Onix\Http;
 use Onix\Http\Response\ResponseStack;
 use Onix\Http\Stream\ResourceStream;
 use Onix\Http\Stream\StringStream;
+use ErrorException;
 
 class Client
 {
