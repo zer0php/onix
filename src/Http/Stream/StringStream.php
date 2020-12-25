@@ -26,5 +26,4 @@ class StringStream extends ResourceStream implements StreamInterface
 
         return $resource;
     }
-
 }
