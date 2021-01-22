@@ -9,7 +9,7 @@ use Onix\Http\Stream\ResourceStream;
 use Onix\Http\Stream\StringStream;
 use ErrorException;
 
-class Client
+class Client implements ClientInterface
 {
     private array $options;
 
