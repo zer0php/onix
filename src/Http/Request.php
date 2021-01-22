@@ -50,4 +50,12 @@ class Request
     {
         return $this->headers;
     }
+
+    public function withUri(string $uri): self
+    {
+        $new = clone $this;
+        $new->uri = $uri;
+
+        return $new;
+    }
 }
