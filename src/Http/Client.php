@@ -90,11 +90,16 @@ class Client implements ClientInterface
      */
     private function getContext(string $method, string $data = '', array $headers = [])
     {
-        $transformedHeaders = $this->getTransformedHeaders($headers);
-
+        $header = '';
+        if (count($headers) > 0) {
+            $transformedHeaders = $this->getTransformedHeaders($headers);
+            $header = implode("\r\n", $transformedHeaders);
+            $header .= "\r\n";
+        }
+        
         $options = $this->options;
         $options['http']['method'] = $method;
-        $options['http']['header'] = implode("\r\n", $transformedHeaders);
+        $options['http']['header'] = $header;
         $options['http']['content'] = $data;
 
         return stream_context_create($options);
