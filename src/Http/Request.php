@@ -58,4 +58,12 @@ class Request
 
         return $new;
     }
+
+    public function withHeader(string $key, string $value): self
+    {
+        $new = clone $this;
+        $new->headers[$key] = $value;
+
+        return $new;
+    }
 }
