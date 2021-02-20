@@ -1,8 +1,6 @@
-name: PHPUnit tests
+name: CI
 
-on:
-  push:
-    branches: [ master ]
+on: push
 
 jobs:
   install-and-cat-command:
@@ -10,17 +8,20 @@ jobs:
     steps:
     - name: "Checkout code"
       uses: actions/checkout@v2
-      
+
     - name: "Install dependencies"
       uses: php-actions/composer@v4
-      
+
     - name: "Run CheckStyle + Analyzes + Tests"
       uses: php-actions/composer@v4
       with:
         command: cat
 
+  publish:
+    if: startsWith(github.ref, 'refs/tags')
+    steps:
     - name: "Update commit status to success"
       uses: ouzi-dev/commit-status-updater@v1.1.0
       with:
         status: "success"
- 
+
