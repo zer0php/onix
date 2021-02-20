@@ -6,7 +6,7 @@ jobs:
   test:
     runs-on: ubuntu-20.04
     container:
-      image: docker://registry.gitlab.com/6eneric/img/php/composer:8.0.2-alpine
+      image: docker://registry.gitlab.com/6eneric/img/php/composer:7.4.15-alpine
     steps:
     - name: "Checkout code"
       uses: actions/checkout@v2
