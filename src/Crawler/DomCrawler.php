@@ -26,7 +26,8 @@ class DomCrawler
      */
     public function find(string $cssExpression, ?DOMNode $contextNode = null): DOMNodeList
     {
-        $expression = $this->transformToXPathExpression($cssExpression);
+        $expression = $this->transformToXPathExpression($cssExpression, $contextNode);
+
         $domNodeList = $this->domXPath->query($expression, $contextNode);
 
         if ($domNodeList === false) {
@@ -36,10 +37,22 @@ class DomCrawler
         return $domNodeList;
     }
 
-    protected function transformToXPathExpression(string $cssExpression): string
+    protected function transformToXPathExpression(string $cssExpression, ?DOMNode $contextNode): string
     {
-        if (strpos($cssExpression, '//') !== 0) {
-            $cssExpression = '//' . $cssExpression;
+        if ($cssExpression === '') {
+            throw new InvalidArgumentException('Expression cannot be empty');
+        }
+
+        if (strpos($cssExpression, '//') === false) {
+            if ($contextNode) {
+                $cssExpression = './/' . $cssExpression;
+            } else {
+                $cssExpression = '//' . $cssExpression;
+            }
+        }
+
+        if (!preg_match('#//[a-zA-Z0-9]+#', $cssExpression)) {
+            $cssExpression = str_replace('//', '//*', $cssExpression);
         }
 
         return preg_replace(

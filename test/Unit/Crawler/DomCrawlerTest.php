@@ -72,7 +72,7 @@ class DomCrawlerTest extends TestCase
      */
     public function find_GivenAttributeExpression_CallsDomXPathQueryWithTransformedExpression(): void
     {
-        $expectedExpression = '//[@attr="dummy-attr"]';
+        $expectedExpression = '//*[@attr="dummy-attr"]';
         $xPathMock = $this->getXPathMock($expectedExpression);
 
         $domCrawler = new DomCrawler($xPathMock);
@@ -82,9 +82,33 @@ class DomCrawlerTest extends TestCase
     /**
      * @test
      */
+    public function find_GivenAttributeExpressionWithTag_CallsDomXPathQueryWithTransformedExpression(): void
+    {
+        $expectedExpression = '//a[@attr="dummy-attr"]';
+        $xPathMock = $this->getXPathMock($expectedExpression);
+
+        $domCrawler = new DomCrawler($xPathMock);
+        $domCrawler->find('a[attr="dummy-attr"]');
+    }
+
+    /**
+     * @test
+     */
     public function find_GivenIdExpression_CallsDomXPathQueryWithTransformedExpression(): void
     {
-        $expectedExpression = '//[@id="Dummy-id_1"]';
+        $expectedExpression = '//*[@id="Dummy-id_1"]';
+        $xPathMock = $this->getXPathMock($expectedExpression);
+
+        $domCrawler = new DomCrawler($xPathMock);
+        $domCrawler->find('#Dummy-id_1');
+    }
+
+    /**
+     * @test
+     */
+    public function find_GivenIdExpressionWithTag_CallsDomXPathQueryWithTransformedExpression(): void
+    {
+        $expectedExpression = '//*[@id="Dummy-id_1"]';
         $xPathMock = $this->getXPathMock($expectedExpression);
 
         $domCrawler = new DomCrawler($xPathMock);
@@ -96,11 +120,23 @@ class DomCrawlerTest extends TestCase
      */
     public function find_GivenClassExpression_CallsDomXPathQueryWithTransformedExpression(): void
     {
-        $expectedExpression = '//[contains(concat(" ", normalize-space(@class), " "), " Dummy-class_1 ")]';
+        $expectedExpression = '//*[contains(concat(" ", normalize-space(@class), " "), " Dummy-class_1 ")]';
         $xPathMock = $this->getXPathMock($expectedExpression);
 
         $domCrawler = new DomCrawler($xPathMock);
         $domCrawler->find('.Dummy-class_1');
+    }
+
+    /**
+     * @test
+     */
+    public function find_GivenClassExpressionWithTag_CallsDomXPathQueryWithTransformedExpression(): void
+    {
+        $expectedExpression = '//a[contains(concat(" ", normalize-space(@class), " "), " Dummy-class_1 ")]';
+        $xPathMock = $this->getXPathMock($expectedExpression);
+
+        $domCrawler = new DomCrawler($xPathMock);
+        $domCrawler->find('a.Dummy-class_1');
     }
 
     /**
@@ -113,11 +149,28 @@ class DomCrawlerTest extends TestCase
         $xPathMock = $this->createMock(DOMXPath::class);
         $xPathMock->expects($this->once())
             ->method('query')
-            ->with('//dummy-tag', $contextNode)
+            ->with('.//dummy-tag', $contextNode)
             ->willReturn($this->createMock(DOMNodeList::class));
 
         $domCrawler = new DomCrawler($xPathMock);
         $domCrawler->find('dummy-tag', $contextNode);
+    }
+
+    /**
+     * @test
+     */
+    public function find_GivenIdExpressionAndContextNodeWithTag_CallsDomXPathQueryWithTransformerExpressionAndContextNode(): void
+    {
+        $contextNode = $this->createMock(DOMNode::class);
+
+        $xPathMock = $this->createMock(DOMXPath::class);
+        $xPathMock->expects($this->once())
+            ->method('query')
+            ->with('.//*[@id="dummy-id"]', $contextNode)
+            ->willReturn($this->createMock(DOMNodeList::class));
+
+        $domCrawler = new DomCrawler($xPathMock);
+        $domCrawler->find('#dummy-id', $contextNode);
     }
 
     private function getXPathMock(string $expression): MockObject
