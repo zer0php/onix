@@ -5,17 +5,14 @@ on: push
 jobs:
   test:
     runs-on: ubuntu-20.04
+    container:
+      image: docker://registry.gitlab.com/6eneric/img/php/composer:8.0.2-alpine
     steps:
     - name: "Checkout code"
       uses: actions/checkout@v2
 
     - name: "Install dependencies"
-      uses: php-actions/composer@v4
-
-    - name: "Run CheckStyle + Analyzes + Tests"
-      uses: php-actions/composer@v4
-      with:
-        command: cat
+      run: composer cat
 
   publish:
     if: startsWith(github.ref, 'refs/tags')
