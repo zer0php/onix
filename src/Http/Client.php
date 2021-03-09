@@ -13,7 +13,7 @@ class Client implements ClientInterface
     private NativeAdapter $adapter;
     private array $options;
 
-    private ?CookieJar $cookieJar;
+    private ?CookieJar $cookieJar = null;
 
     public function __construct(NativeAdapter $adapter, array $options = [])
     {
