@@ -47,8 +47,6 @@ class NativeAdapter
 
         if (!isset($metadata['wrapper_data'])) {
             throw new InvalidArgumentException('Invalid HTTP Response');
-
-            return $responseStack;
         }
 
         foreach ($this->normalizeHeaders($metadata['wrapper_data']) as $headers) {
