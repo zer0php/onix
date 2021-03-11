@@ -7,6 +7,8 @@ use Onix\Http\Request;
 use Onix\Http\Response;
 use Onix\Http\Response\ResponseStack;
 use Onix\Http\Stream\ResourceStream;
+use Onix\Http\Stream\StringStream;
+use InvalidArgumentException;
 
 class NativeAdapter
 {
@@ -42,6 +44,13 @@ class NativeAdapter
         $metadata = stream_get_meta_data($connection);
 
         $responseStack = new ResponseStack();
+
+        if (!isset($metadata['wrapper_data'])) {
+            throw new InvalidArgumentException('Invalid HTTP Response');
+
+            return $responseStack;
+        }
+
         foreach ($this->normalizeHeaders($metadata['wrapper_data']) as $headers) {
             $statusCode = $headers['status'];
             unset($headers['status']);
