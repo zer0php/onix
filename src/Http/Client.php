@@ -69,11 +69,13 @@ class Client implements ClientInterface
         $request = $this->loadCookieFromJar($request);
 
         $connection = $this->adapter->createConnection($request);
-        $response = $this->adapter->getResponseStack($connection);
+        $responseStack = $this->adapter->getResponseStack($connection);
 
-        $this->addToCookieJarFromHeaders($response);
+        foreach ($responseStack as $response) {
+            $this->addToCookieJarFromHeaders($response);
+        }
 
-        return $response;
+        return $responseStack;
     }
 
     private function loadCookieFromJar(Request $request): Request

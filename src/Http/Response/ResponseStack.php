@@ -39,6 +39,9 @@ class ResponseStack implements ResponseInterface, IteratorAggregate
         return end($this->stack)->withHeader($key, $value);
     }
 
+    /**
+     * @return Traversable|ArrayIterator
+     */
     public function getIterator(): Traversable
     {
         return new ArrayIterator($this->stack);
