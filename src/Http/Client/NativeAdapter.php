@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Onix\Http\Client;
 
 use ErrorException;
@@ -12,6 +14,13 @@ use InvalidArgumentException;
 
 class NativeAdapter
 {
+    private array $options;
+    
+    public function __construct(array $options = [])
+    {
+        $this->options = $options;
+    }
+
     /**
      * @param Request $request
      * @return resource
@@ -84,6 +93,11 @@ class NativeAdapter
         $options['http']['method'] = $method;
         $options['http']['header'] = $header;
         $options['http']['content'] = $content;
+        $options['http']['ignore_errors'] = true;
+
+        if (isset($this->options['http'])) {
+            $options['http'] = array_merge($options['http'], $this->options['http']);
+        }
 
         return stream_context_create($options);
     }

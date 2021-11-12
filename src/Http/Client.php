@@ -7,6 +7,7 @@ namespace Onix\Http;
 use Onix\Http\Client\CookieJar;
 use Onix\Http\Client\NativeAdapter;
 use Onix\Http\Stream\StringStream;
+use ErrorException;
 
 class Client implements ClientInterface
 {
@@ -70,6 +71,11 @@ class Client implements ClientInterface
 
         $connection = $this->adapter->createConnection($request);
         $responseStack = $this->adapter->getResponseStack($connection);
+        $statusCode = $responseStack->getStatusCode();
+
+        if ($statusCode < 200 || $statusCode > 399) {
+            throw new ErrorException($responseStack->getBody()->getContents());
+        }
 
         foreach ($responseStack as $response) {
             $this->addToCookieJarFromHeaders($response);
