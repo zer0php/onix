@@ -14,9 +14,11 @@ class Emitter
         $headers = $response->getHeaders();
 
         header("HTTP/1.1 {$statusCode}");
-
-        foreach ($headers as $headerKey => $headerValue) {
-            header("{$headerKey}: {$headerValue}");
+        
+        foreach ($headers as $headerKey => $headerValues) {
+            foreach ((array)$headerValues as $headerValue) {
+                header("{$headerKey}: {$headerValue}");
+            }
         }
 
         echo $response->getBody()->getContents();
