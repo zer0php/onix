@@ -1,45 +1,46 @@
 {
-  "name": "zer0php/onix",
-  "type": "project",
-  "version": "0.1.4",
-  "description": "Onix Micro Framework",
-  "keywords": [
-    "onix",
-    "micro",
-    "framework"
-  ],
-  "license": "MIT",
-  "require": {
-    "php": ">=7.4",
-    "ext-json": "*",
-    "ext-dom": "*"
-  },
-  "require-dev": {
-    "roave/security-advisories": "dev-master",
-    "squizlabs/php_codesniffer": "^3.5",
-    "phpstan/phpstan": "^0.12.25",
-    "phpunit/phpunit": "^9.1"
-  },
-  "autoload": {
-    "psr-4": {
-      "Onix\\": "src/"
+    "name": "zer0php/onix",
+    "type": "project",
+    "version": "0.4.0",
+    "description": "Onix Micro Framework",
+    "keywords": [
+        "onix",
+        "micro",
+        "framework"
+    ],
+    "license": "MIT",
+    "require": {
+        "php": ">=7.4",
+        "ext-json": "*",
+        "ext-dom": "*",
+        "ext-curl": "*"
+    },
+    "require-dev": {
+        "roave/security-advisories": "dev-master",
+        "squizlabs/php_codesniffer": "^3.6",
+        "phpstan/phpstan": "^0.12.99",
+        "phpunit/phpunit": "^9.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "Onix\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "OnixTest\\": "test/"
+        }
+    },
+    "scripts": {
+        "check-style": "php vendor/squizlabs/php_codesniffer/bin/phpcs -s -p",
+        "analyse": "php vendor/phpstan/phpstan/phpstan analyse",
+        "test": "php vendor/phpunit/phpunit/phpunit",
+        "test-coverage": "php vendor/phpunit/phpunit/phpunit --coverage-html tmp/coverage/",
+        "fix-style": "php vendor/squizlabs/php_codesniffer/bin/phpcbf",
+        "cat": [
+            "@check-style",
+            "@analyse",
+            "@test"
+        ]
     }
-  },
-  "autoload-dev": {
-    "psr-4": {
-      "OnixTest\\": "test/"
-    }
-  },
-  "scripts": {
-    "check-style": "php vendor/squizlabs/php_codesniffer/bin/phpcs -s -p",
-    "analyse": "php vendor/phpstan/phpstan/phpstan analyse",
-    "test": "php vendor/phpunit/phpunit/phpunit",
-    "test-coverage": "php vendor/phpunit/phpunit/phpunit --coverage-html tmp/coverage/",
-    "fix-style": "php vendor/squizlabs/php_codesniffer/bin/phpcbf",
-    "cat": [
-      "@check-style",
-      "@analyse",
-      "@test"
-    ]
-  }
 }
