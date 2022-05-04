@@ -4,19 +4,20 @@ declare(strict_types=1);
 
 namespace Onix\Http;
 
+use Onix\Http\Client\AdapterInterface;
 use Onix\Http\Client\CookieJar;
-use Onix\Http\Client\NativeAdapter;
+use Onix\Http\Exception\NetworkException;
 use Onix\Http\Stream\StringStream;
 use ErrorException;
 
 class Client implements ClientInterface
 {
-    private NativeAdapter $adapter;
+    private AdapterInterface $adapter;
     private array $options;
 
     private ?CookieJar $cookieJar = null;
 
-    public function __construct(NativeAdapter $adapter, array $options = [])
+    public function __construct(AdapterInterface $adapter, array $options = [])
     {
         $this->adapter = $adapter;
         if (isset($options['jar'])) {
@@ -74,7 +75,7 @@ class Client implements ClientInterface
         $statusCode = $responseStack->getStatusCode();
 
         if ($statusCode < 200 || $statusCode > 399) {
-            throw new ErrorException($responseStack->getBody()->getContents());
+            throw new NetworkException($responseStack->getBody()->getContents());
         }
 
         foreach ($responseStack as $response) {

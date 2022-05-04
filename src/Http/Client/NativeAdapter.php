@@ -12,8 +12,10 @@ use Onix\Http\Stream\ResourceStream;
 use Onix\Http\Stream\StringStream;
 use InvalidArgumentException;
 
-class NativeAdapter
+class NativeAdapter implements AdapterInterface
 {
+    use HeadersNormalizerTrait;
+    
     private array $options;
     
     public function __construct(array $options = [])
@@ -100,37 +102,6 @@ class NativeAdapter
         }
 
         return stream_context_create($options);
-    }
-
-    private function normalizeHeaders(array $wrapperData): array
-    {
-        $headers = [];
-
-        $index = 0;
-        foreach ($wrapperData as $header) {
-            if (strpos($header, 'HTTP') === 0) {
-                if (count($headers) > 0) {
-                    $index++;
-                }
-
-                [, $status] = explode(' ', $header);
-                $headers[$index]['status'] = (int)$status;
-
-                continue;
-            }
-
-            [$key, $value] = explode(':', $header, 2);
-
-            $key = strtolower($key);
-
-            if (!isset($headers[$index][$key])) {
-                $headers[$index][$key] = [];
-            }
-
-            $headers[$index][$key][] = trim($value);
-        }
-
-        return $headers;
     }
 
     private function getTransformedHeaders(array $headers): array
