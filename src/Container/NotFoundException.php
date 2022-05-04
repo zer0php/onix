@@ -6,5 +6,4 @@ namespace Onix\Container;
 
 class NotFoundException extends ContainerException
 {
-
 }
