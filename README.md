@@ -1,6 +1,6 @@
 # Onix Micro Framework
 
-![PHPUnit tests](https://github.com/zer0php/onix/workflows/PHPUnit%20tests/badge.svg)
+[![CI](https://github.com/zer0php/onix/actions/workflows/ci.yml/badge.svg)](https://github.com/zer0php/onix/actions/workflows/ci.yml)
 
 ## Run Check-style + Analyze + Tests
 ```
