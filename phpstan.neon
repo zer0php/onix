@@ -6,7 +6,6 @@ parameters:
         - vendor/autoload.php
     ignoreErrors:
         - '#Call to an undefined method ReflectionType::getName\(\)#'
-        - '#Call to an undefined method ReflectionType::isBuiltin\(\)#'
         -
-            message: '/Parameter #1 \$callback of function spl_autoload_register expects/'
+            message: '#Parameter \#1 \$autoload_function of function spl_autoload_register#'
             path: src/Autoload/ClassLoader.php
