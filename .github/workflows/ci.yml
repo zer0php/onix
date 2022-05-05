@@ -5,32 +5,35 @@ on: push
 jobs:
   test:
     runs-on: ubuntu-20.04
-    container:
-      image: docker://registry.gitlab.com/d0cker/php/composer:7.4.15-alpine
     steps:
     - name: "Checkout code"
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: "7.4"
 
     - name: "Install dependencies"
       run: composer install
 
     - name: "Run CheckStyle + Analyzes + Tests"
       run: composer cat
-      
+
   publish:
-    if: contains(github.ref, 'master')
     runs-on: ubuntu-20.04
     needs: test
+    if: contains(github.ref, 'master')
     steps:
     - name: "Update commit status to success"
       uses: ouzi-dev/commit-status-updater@v1.1.0
       with:
         status: "success"
-        
+
   publish-tag:
-    if: startsWith(github.ref, 'refs/tags')
     runs-on: ubuntu-20.04
     needs: test
+    if: startsWith(github.ref, 'refs/tags')
     steps:
     - name: "Update commit status to success"
       uses: ouzi-dev/commit-status-updater@v1.1.0
