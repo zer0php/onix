@@ -92,9 +92,9 @@ class Client implements ClientInterface
         }
 
         $cookies = [];
-        $headers = $request->getHeaders();
-        if (isset($headers['Cookie'])) {
-            $cookies[] = $headers['Cookie'];
+        $headers = array_change_key_case($request->getHeaders());
+        if (isset($headers['cookie'])) {
+            $cookies[] = $headers['cookie'];
         }
         $cookieLine = $this->cookieJar->getCookieLine();
         if ($cookieLine !== '') {
@@ -114,7 +114,7 @@ class Client implements ClientInterface
             return;
         }
 
-        $headers = $response->getHeaders();
+        $headers = array_change_key_case($response->getHeaders());
         if (isset($headers['set-cookie'])) {
             $this->addToCookieJar($headers['set-cookie']);
         }
