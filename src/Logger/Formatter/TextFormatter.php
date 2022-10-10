@@ -6,16 +6,16 @@ namespace Onix\Logger\Formatter;
 
 class TextFormatter implements FormatterInterface
 {
-    public function format(string $level, string $message, array $context = []): string
+    public function format(array $record): string
     {
-        $level = strtoupper($level);
-        $result = "$level: $message";
+        $level = strtoupper($record['level']);
+        $message = $record['message'];
+        unset($record['level'], $record['message']);
 
-        if (count($context) > 0) {
-            $formattedContext = urldecode(http_build_query($context, '', ' '));
-            $result .= " [$formattedContext]";
-        }
+        $formattedContext = count($record) > 0
+            ? sprintf(' [%s]', urldecode(http_build_query($record, '', ' ')))
+            : '';
 
-        return $result;
+        return sprintf('%s: %s%s', $level, $message, $formattedContext);
     }
 }

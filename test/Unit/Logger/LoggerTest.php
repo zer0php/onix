@@ -10,6 +10,8 @@ use Onix\Http\ResponseInterface;
 use Onix\Http\Response\JsonResponse;
 use Onix\Http\ServerRequest;
 use Exception;
+use Onix\Logger\Decorator\DecoratorInterface;
+use Onix\Logger\Formatter\FormatterInterface;
 use Onix\Logger\Formatter\JsonFormatter;
 use Onix\Logger\Logger;
 use Onix\Logger\LoggerInterface;
@@ -62,6 +64,52 @@ class LoggerTest extends TestCase
             '{"level":"info","message":"example log","param":"value"}' . "\n",
             $this->getLoggedMessage()
         );
+    }
+
+    /**
+     * @test
+     */
+    public function log_WithDecorators_CallsDecoratorsDecorateMethod(): void
+    {
+        $formatterMock = $this->createMock(FormatterInterface::class);
+        $firstDecoratorMock = $this->createMock(DecoratorInterface::class);
+        $secondDecoratorMock = $this->createMock(DecoratorInterface::class);
+
+        $level = LoggerInterface::LEVEL_INFO;
+        $message = 'example log';
+        $context = ['param' => 'value'];
+        $record = array_merge(['level' => $level, 'message' => $message], $context);
+        $firstDecoratorMock
+            ->expects($this->once())
+            ->method('decorate')
+            ->with($record)
+            ->willReturnCallback(function (array $record) {
+                $record['first'] = 'value1';
+
+                return $record;
+            });
+
+        $secondDecoratorMock
+            ->expects($this->once())
+            ->method('decorate')
+            ->with(array_merge($record, ['first' => 'value1']))
+            ->willReturnCallback(function (array $record) {
+                $record['message'] = 'decorated';
+                $record['level'] = LoggerInterface::LEVEL_DEBUG;
+
+                return $record;
+            });
+
+        $formatterMock
+            ->expects($this->once())
+            ->method('format')
+            ->with(array_merge(
+                $record,
+                ['first' => 'value1', 'message' => 'decorated', 'level' => LoggerInterface::LEVEL_DEBUG]
+            ));
+
+        $logger = new Logger($this->stream, $formatterMock, $firstDecoratorMock, $secondDecoratorMock);
+        $logger->log($level, $message, $context);
     }
 
     /**

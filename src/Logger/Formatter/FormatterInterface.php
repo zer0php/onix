@@ -6,5 +6,5 @@ namespace Onix\Logger\Formatter;
 
 interface FormatterInterface
 {
-    public function format(string $level, string $message, array $context = []): string;
+    public function format(array $record): string;
 }

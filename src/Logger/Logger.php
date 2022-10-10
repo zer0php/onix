@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Onix\Logger;
 
+use DateTimeInterface;
+use Onix\Logger\Decorator\DecoratorInterface;
+use Onix\Logger\Decorator\TimestampDecorator;
 use Onix\Logger\Formatter\FormatterInterface;
 use Onix\Logger\Formatter\TextFormatter;
 
@@ -14,16 +17,35 @@ class Logger implements LoggerInterface
      */
     private $stream;
     private FormatterInterface $formatter;
+    /**
+     * @var array<DecoratorInterface>
+     */
+    private array $decorators;
 
-    public function __construct($stream, FormatterInterface $formatter = null)
+    public static function createStdoutLogger(
+        ?FormatterInterface $formatter = null,
+        DecoratorInterface...$decorators
+    ): self {
+        $decorators[] = new TimestampDecorator();
+
+        return new Logger(fopen('php://stdout', 'w+'), $formatter, ...$decorators);
+    }
+
+    public function __construct($stream, ?FormatterInterface $formatter = null, DecoratorInterface...$decorators)
     {
         $this->stream = $stream;
         $this->formatter = $formatter ?? new TextFormatter();
+        $this->decorators = $decorators;
     }
 
     public function log(string $level, string $message, array $context = []): void
     {
-        fwrite($this->stream, $this->formatter->format($level, $message, $context) . PHP_EOL);
+        $record = array_merge(['level' => $level, 'message' => $message], $context);
+        foreach ($this->decorators as $decorator) {
+            $record = $decorator->decorate($record);
+        }
+
+        fwrite($this->stream, $this->formatter->format($record) . PHP_EOL);
     }
 
     public function emergency(string $message, array $context = []): void
