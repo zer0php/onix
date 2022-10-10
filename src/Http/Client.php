@@ -13,7 +13,6 @@ use ErrorException;
 class Client implements ClientInterface
 {
     private AdapterInterface $adapter;
-    private array $options;
 
     private ?CookieJar $cookieJar = null;
 
@@ -24,8 +23,6 @@ class Client implements ClientInterface
             $this->setCookieJar($options['jar']);
             unset($options['jar']);
         }
-
-        $this->options = $options;
     }
 
     /**
@@ -33,6 +30,7 @@ class Client implements ClientInterface
      * @param string|array $query [optional]
      * @param array $headers [optional]
      * @return ResponseInterface
+     * @throws NetworkException
      */
     public function get(string $url, $query = '', array $headers = []): ResponseInterface
     {
@@ -52,6 +50,7 @@ class Client implements ClientInterface
      * @param string|array $data [optional]
      * @param array $headers [optional]
      * @return ResponseInterface
+     * @throws NetworkException
      */
     public function post(string $url, $data = '', array $headers = []): ResponseInterface
     {

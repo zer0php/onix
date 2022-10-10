@@ -14,14 +14,11 @@ class CurlAdapter implements AdapterInterface
 {
     use HeadersNormalizerTrait;
 
-    private array $options;
     private array $responseHeaders;
+    /**
+     * @var resource
+     */
     private $responseBody;
-
-    public function __construct(array $options = [])
-    {
-        $this->options = $options;
-    }
 
     public function createConnection(Request $request)
     {
