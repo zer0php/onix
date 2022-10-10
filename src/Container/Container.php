@@ -19,9 +19,13 @@ class Container implements ContainerInterface
      */
     private $defaultFactory;
 
+    /**
+     * @param array $factories
+     * @return static|self
+     */
     public static function createWithAutoWireFactory(array $factories): self
     {
-        return new self($factories, new AutoWireFactory(new ReflectionResolver()));
+        return new static($factories, new AutoWireFactory(new ReflectionResolver()));
     }
 
     /**
