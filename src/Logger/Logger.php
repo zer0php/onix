@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Onix\Logger;
 
-use DateTimeInterface;
 use Onix\Logger\Decorator\DecoratorInterface;
 use Onix\Logger\Decorator\TimestampDecorator;
 use Onix\Logger\Formatter\FormatterInterface;
