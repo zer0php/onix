@@ -10,13 +10,10 @@ use ReflectionMethod;
 class ReflectionResolver
 {
     /**
-     * @param ReflectionMethod $method
-     * @param Container $container
-     * @return array
      * @throws NotFoundException
      * @throws ReflectionException
      */
-    public function resolveArguments(ReflectionMethod $method, Container $container): array
+    public function resolveArguments(ReflectionMethod $method, ContainerInterface $container): array
     {
         $arguments = [];
 

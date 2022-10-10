@@ -19,18 +19,14 @@ class Container implements ContainerInterface
      */
     private $defaultFactory;
 
-    /**
-     * @param array $factories
-     * @return static|self
-     */
     public static function createWithAutoWireFactory(array $factories): self
     {
-        return new static($factories, new AutoWireFactory(new ReflectionResolver()));
+        return new self($factories, new AutoWireFactory(new ReflectionResolver()));
     }
 
     /**
      * @param array<callable> $factories
-     * @param callable|null $defaultFactory
+     * @param callable|null $defaultFactory [optional]
      */
     public function __construct(array $factories, ?callable $defaultFactory = null)
     {
@@ -45,11 +41,11 @@ class Container implements ContainerInterface
      */
     public function get(string $name)
     {
-        $factory = $this->getFactory($name);
-
-        if (!$this->has($name)) {
-            $this->instances[$name] = $factory($this, $name);
+        if ($this->has($name)) {
+            return $this->instances[$name];
         }
+
+        $this->instances[$name] = $this->getFactory($name)($this, $name);
 
         return $this->instances[$name];
     }
@@ -74,6 +70,6 @@ class Container implements ContainerInterface
             return $this->defaultFactory;
         }
 
-        throw new NotFoundException('Factory not found for given name: ' . $name);
+        throw new NotFoundException("Factory not found for given name: $name");
     }
 }

@@ -18,27 +18,21 @@ class AutoWireFactory
     }
 
     /**
-     * @param Container $container
-     * @param string $name
-     * @return mixed
      * @throws NotFoundException
      * @throws ContainerException
      * @throws ReflectionException
      */
-    public function __invoke(Container $container, string $name)
+    public function __invoke(ContainerInterface $container, string $name): object
     {
         return $this->resolve($this->getReflectionClass($name), $container);
     }
 
     /**
-     * @param ReflectionClass $reflectionClass
-     * @param Container $container
-     * @return object
      * @throws ContainerException
      * @throws NotFoundException
      * @throws ReflectionException
      */
-    private function resolve(ReflectionClass $reflectionClass, Container $container)
+    private function resolve(ReflectionClass $reflectionClass, ContainerInterface $container): object
     {
         if (!$reflectionClass->isInstantiable()) {
             throw new ContainerException('Cannot instantiate ' . $reflectionClass->getName());
@@ -56,8 +50,6 @@ class AutoWireFactory
     }
 
     /**
-     * @param string $name
-     * @return ReflectionClass
      * @throws ReflectionException
      */
     private function getReflectionClass(string $name): ReflectionClass
