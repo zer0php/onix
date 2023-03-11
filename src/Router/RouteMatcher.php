@@ -33,6 +33,6 @@ class RouteMatcher
             return $this->routeFactory->createMatchedRoute($compiledRoute->getRoute(), $params);
         }
 
-        throw new RouteNotFoundException("Route not found for given path: ${path}");
+        throw new RouteNotFoundException("Route not found for given path: {$path}");
     }
 }
