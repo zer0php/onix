@@ -40,6 +40,11 @@ class ResourceStream implements StreamInterface
         return (string)fread($this->resource, $length);
     }
 
+    public function eof(): bool
+    {
+        return feof($this->resource);
+    }
+
     public function write(string $data): int
     {
         return (int)fwrite($this->resource, $data);

@@ -12,6 +12,8 @@ interface StreamInterface
 
     public function read(int $length): string;
 
+    public function eof(): bool;
+
     public function write(string $data): int;
 
     public function seek(int $offset): int;
