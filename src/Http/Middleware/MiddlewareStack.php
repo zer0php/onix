@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace Onix\Http\Middleware;
 
-use Onix\Container\Container;
+use Onix\Container\ContainerInterface;
 use Onix\Http\MiddlewareInterface;
 use Onix\Http\RequestHandlerInterface;
 use RuntimeException;
 
 class MiddlewareStack
 {
-    private Container $container;
+    private ContainerInterface $container;
     private array $middlewareStack = [];
 
-    public function __construct(Container $container)
+    public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
     }

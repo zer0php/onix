@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Onix\Router;
 
-use Onix\Container\Container;
+use Onix\Container\ContainerInterface;
 use Onix\Http\Middleware\MiddlewareStack;
 use Onix\Http\Middleware\MiddlewareStackHandler;
 use Onix\Http\RequestHandlerInterface;
@@ -14,10 +14,10 @@ use Onix\Router\Route\MatchedRoute;
 
 class RouteHandler implements RequestHandlerInterface
 {
-    private Container $container;
+    private ContainerInterface $container;
     private RouteFinder $routeFinder;
 
-    public function __construct(Container $container, RouteFinder $routeFinder)
+    public function __construct(ContainerInterface $container, RouteFinder $routeFinder)
     {
         $this->container = $container;
         $this->routeFinder = $routeFinder;
