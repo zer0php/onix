@@ -9,16 +9,19 @@ use Onix\Http\RequestHandlerInterface;
 use Onix\Http\ResponseInterface;
 use Onix\Http\Response\JsonResponse;
 use Onix\Http\ServerRequest;
+use Onix\Logger\LoggerInterface;
 use Exception;
 use PHPUnit\Framework\TestCase;
 
 class ErrorHandlerMiddlewareTest extends TestCase
 {
+    private LoggerInterface $loggerMock;
     private ErrorHandlerMiddleware $errorHandlerMiddleware;
 
     protected function setUp(): void
     {
-        $this->errorHandlerMiddleware = new ErrorHandlerMiddleware();
+        $this->loggerMock = $this->createMock(LoggerInterface::class);
+        $this->errorHandlerMiddleware = new ErrorHandlerMiddleware($this->loggerMock);
     }
 
     /**
@@ -26,8 +29,6 @@ class ErrorHandlerMiddlewareTest extends TestCase
      */
     public function process_WithoutError_ReturnsHandlerResponse(): void
     {
-        $errorHandler = new ErrorHandlerMiddleware();
-
         $request = $this->createMock(ServerRequest::class);
         $response = $this->createMock(ResponseInterface::class);
         $handler = $this->createMock(RequestHandlerInterface::class);
@@ -36,7 +37,7 @@ class ErrorHandlerMiddlewareTest extends TestCase
             ->method('handle')
             ->willReturn($response);
 
-        $result = $errorHandler->process($request, $handler);
+        $result = $this->errorHandlerMiddleware->process($request, $handler);
 
         $this->assertEquals($response, $result);
     }
@@ -48,7 +49,7 @@ class ErrorHandlerMiddlewareTest extends TestCase
     {
         $errorMessage = 'Something went wrong';
         $debugOn = true;
-        $errorHandler = new ErrorHandlerMiddleware($debugOn);
+        $errorHandler = new ErrorHandlerMiddleware($this->loggerMock, $debugOn);
 
         $request = $this->createMock(ServerRequest::class);
         $handler = $this->createMock(RequestHandlerInterface::class);
@@ -69,7 +70,7 @@ class ErrorHandlerMiddlewareTest extends TestCase
     {
         $errorMessage = 'Something went wrong';
         $debugOn = true;
-        $errorHandler = new ErrorHandlerMiddleware($debugOn);
+        $errorHandler = new ErrorHandlerMiddleware($this->loggerMock, $debugOn);
 
         $handler = $this->createMock(RequestHandlerInterface::class);
         $request = $this->createMock(ServerRequest::class);
@@ -94,7 +95,7 @@ class ErrorHandlerMiddlewareTest extends TestCase
     {
         $errorMessage = 'Something went wrong';
         $debugOn = true;
-        $errorHandler = new ErrorHandlerMiddleware($debugOn);
+        $errorHandler = new ErrorHandlerMiddleware($this->loggerMock, $debugOn);
 
         $handler = $this->createMock(RequestHandlerInterface::class);
         $request = $this->createMock(ServerRequest::class);
@@ -115,7 +116,7 @@ class ErrorHandlerMiddlewareTest extends TestCase
     {
         $expectedErrorMessage = 'Internal Server Error';
         $debugOn = false;
-        $errorHandler = new ErrorHandlerMiddleware($debugOn);
+        $errorHandler = new ErrorHandlerMiddleware($this->loggerMock, $debugOn);
 
         $handler = $this->createMock(RequestHandlerInterface::class);
         $request = $this->createMock(ServerRequest::class);

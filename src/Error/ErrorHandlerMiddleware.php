@@ -9,15 +9,18 @@ use Onix\Http\RequestHandlerInterface;
 use Onix\Http\ResponseInterface;
 use Onix\Http\Response\JsonResponse;
 use Onix\Http\ServerRequest;
+use Onix\Logger\LoggerInterface;
 use ErrorException;
 use Throwable;
 
 class ErrorHandlerMiddleware implements MiddlewareInterface
 {
+    private LoggerInterface $logger;
     private bool $debug;
 
-    public function __construct(bool $debug = false)
+    public function __construct(LoggerInterface $logger, bool $debug = false)
     {
+        $this->logger = $logger;
         $this->debug = $debug;
     }
 
@@ -29,11 +32,18 @@ class ErrorHandlerMiddleware implements MiddlewareInterface
 
         try {
             $response = $handler->handle($request);
-        } catch (Throwable $throwable) {
+        } catch (Throwable $e) {
+            $this->logger->error($e->getMessage(), [
+                'error_class' => get_class($e),
+                'error_code' => $e->getCode(),
+                'error_file' => $e->getFile(),
+                'error_line' => $e->getLine(),
+                'error_trace' => $e->getTraceAsString()
+            ]);
             if ($this->debug) {
                 $response = new JsonResponse([
-                    'error' => $throwable->getMessage(),
-                    'trace' => $throwable->getTraceAsString()
+                    'error' => $e->getMessage(),
+                    'trace' => $e->getTraceAsString()
                 ], 500);
             } else {
                 $response = new JsonResponse([
