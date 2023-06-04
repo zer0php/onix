@@ -116,7 +116,7 @@ class CurlAdapter implements AdapterInterface
         curl_exec($connection);
 
         if (curl_errno($connection)) {
-            throw new NetworkException(curl_error($connection));
+            throw NetworkException::createFromString(curl_error($connection));
         }
 
         curl_close($connection);
