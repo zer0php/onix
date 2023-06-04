@@ -73,12 +73,12 @@ class Client implements ClientInterface
         $responseStack = $this->adapter->getResponseStack($connection);
         $statusCode = $responseStack->getStatusCode();
 
-        if ($statusCode < 200 || $statusCode > 399) {
-            throw new NetworkException($responseStack->getBody()->getContents());
-        }
-
         foreach ($responseStack as $response) {
             $this->addToCookieJarFromHeaders($response);
+        }
+
+        if ($statusCode < 200 || $statusCode > 399) {
+            throw new NetworkException($responseStack);
         }
 
         return $responseStack;
