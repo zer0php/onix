@@ -19,7 +19,7 @@ class NetworkException extends Exception
         $this->response = $response;
     }
 
-    public function getResponse(): Response
+    public function getResponse(): ResponseInterface
     {
         return $this->response;
     }
