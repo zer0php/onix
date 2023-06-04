@@ -6,7 +6,7 @@ namespace Onix\Http\Stream;
 
 use Onix\Http\StreamInterface;
 
-class JsonStream extends StringStream implements StreamInterface
+class JsonStream extends StringStream
 {
     public function __construct(array $data)
     {

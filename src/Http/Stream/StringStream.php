@@ -6,7 +6,7 @@ namespace Onix\Http\Stream;
 
 use Onix\Http\StreamInterface;
 
-class StringStream extends ResourceStream implements StreamInterface
+class StringStream extends ResourceStream
 {
     public function __construct(string $data = '')
     {

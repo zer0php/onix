@@ -14,6 +14,8 @@ class CurlAdapter implements AdapterInterface
 {
     use HeadersNormalizerTrait;
 
+    public const CURL_OPTIONS_KEY = 'curl_options';
+
     private array $responseHeaders;
     /**
      * @var resource
@@ -99,6 +101,11 @@ class CurlAdapter implements AdapterInterface
         $userAgent = $request->getHeaders()['User-Agent'] ?? null;
         if ($userAgent !== null) {
             $options[CURLOPT_USERAGENT] = $userAgent;
+        }
+
+        $metadata = $request->getBody()->getMetadata();
+        if (isset($metadata[self::CURL_OPTIONS_KEY])) {
+            $options = $options + $metadata[self::CURL_OPTIONS_KEY];
         }
 
         return $options;
