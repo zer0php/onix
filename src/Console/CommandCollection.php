@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Onix\Console;
 
 use InvalidArgumentException;
@@ -27,8 +29,6 @@ class CommandCollection
     }
 
     /**
-     * @param string $commandName
-     * @return CommandInterface
      * @throws NotFoundException
      */
     public function get(string $commandName): CommandInterface

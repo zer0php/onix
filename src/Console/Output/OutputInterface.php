@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Onix\Console\Output;
 
 interface OutputInterface

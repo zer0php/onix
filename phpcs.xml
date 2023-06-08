@@ -6,4 +6,8 @@
     <rule ref="PSR12">
         <exclude name="PSR12.ControlStructures.ControlStructureSpacing.FirstExpressionLine" />
     </rule>
+    <rule ref="Generic.PHP.RequireStrictTypes.MissingDeclaration">
+    </rule>
+    <rule ref="Generic.Files.LineLength.TooLong">
+    </rule>
 </ruleset>

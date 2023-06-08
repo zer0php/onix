@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Onix\Console;
 
 use InvalidArgumentException;
@@ -12,9 +14,7 @@ class ArgumentCollection implements IteratorAggregate, JsonSerializable
     private const FIRST_INDEX = 1;
 
     private array $parsedArguments;
-    /**
-     * @var Argument[]
-     */
+    /** @var Argument[] */
     private array $compiledArguments;
 
     public function __construct(array $parsedArguments)

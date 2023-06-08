@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Onix\Console;
 
 use Onix\Console\Input\InputFactory;
@@ -53,9 +55,7 @@ class Application
     }
 
     /**
-     * @param ArgumentCollection $arguments
-     * @return CommandInterface
-     * @throws InvalidArgumentException | NotFoundException
+     * @throws InvalidArgumentException|NotFoundException
      */
     private function getCommand(ArgumentCollection $arguments): CommandInterface
     {
